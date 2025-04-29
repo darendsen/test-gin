@@ -8,7 +8,7 @@ import (
 	"gorm.io/gorm"
 
 	"github.com/darendsen/test-gin/internal/models"
-	"github.com/darendsen/test-gin/internal/utils"
+	"github.com/darendsen/test-gin/internal/scopes"
 )
 
 type UserHandler struct {
@@ -32,7 +32,7 @@ func (h *UserHandler) GetUsers(c *gin.Context) {
 			return
 		}
 		age := uint8(ageUint64)
-		query = query.Scopes(utils.Age(age))
+		query = query.Scopes(scopes.Age(age))
 	}
 
 	var users []models.User
