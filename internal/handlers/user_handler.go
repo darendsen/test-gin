@@ -80,6 +80,7 @@ func (h *UserHandler) UpdateUser(c *gin.Context) {
 
 	age, err := ParseAge(c.PostForm("age"))
 	if err == nil {
+		user.Name = c.PostForm("name")
 		user.Age = age
 	}
 
