@@ -64,7 +64,7 @@ func (h *UserHandler) GetUser(c *gin.Context) {
 func (h *UserHandler) CreateUser(c *gin.Context) {
 	email := "darendsen@gamepoint.com"
 	birthday := time.Now()
-	user := models.User{Name: "Jinzhu", Email: &email, Birthday: &birthday, Age: 18}
+	user := models.User{Name: "Jinzhu", Email: email, Birthday: &birthday, Age: 18}
 	h.DB.Select("Name", "Email", "Birthday", "Age").Create(&user)
 
 	c.JSON(200, gin.H{

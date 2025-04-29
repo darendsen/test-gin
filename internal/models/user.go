@@ -8,7 +8,7 @@ import (
 type User struct {
 	ID           uint
 	Name         string
-	Email        *string
+	Email        string
 	Age          uint8
 	Birthday     *time.Time
 	MemberNumber sql.NullString
