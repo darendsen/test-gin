@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"fmt"
 	"strconv"
 	"time"
 
@@ -22,16 +23,8 @@ func NewUserHandler(db *gorm.DB) *UserHandler {
 func (h *UserHandler) GetUsers(c *gin.Context) {
 	query := h.DB
 
-	ageStr := c.Query("age")
-	if ageStr != "" {
-		ageUint64, err := strconv.ParseUint(ageStr, 10, 8)
-		if err != nil {
-			c.JSON(400, gin.H{
-				"error": "Invalid age parameter",
-			})
-			return
-		}
-		age := uint8(ageUint64)
+	age, err := ParseAge(c.Query("age"))
+	if err == nil {
 		query = query.Scopes(scopes.Age(age))
 	}
 
@@ -85,10 +78,27 @@ func (h *UserHandler) UpdateUser(c *gin.Context) {
 		return
 	}
 
-	user.Age = 100
+	age, err := ParseAge(c.PostForm("age"))
+	if err == nil {
+		user.Age = age
+	}
+
 	h.DB.Save(&user)
 
 	c.JSON(200, gin.H{
 		"user": user,
 	})
+}
+
+func ParseAge(ageStr string) (uint8, error) {
+	if ageStr == "" {
+		return 0, fmt.Errorf("age string is empty")
+	}
+
+	ageUint64, err := strconv.ParseUint(ageStr, 10, 8)
+	if err != nil {
+		return 0, fmt.Errorf("failed to parse age: %w", err)
+	}
+
+	return uint8(ageUint64), nil
 }
